@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include, path
+from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+     path('register', views.user_registration, name='user-register'),
+    path('login', views.user_login, name='user-login'),
+    path('profile', views.user_profile, name='user-profile'),
+    # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('token/verify/', TokenVerifyView.as_view(), name='token_verify'), 
+    path('history/', views.get_history, name='user-history' )
 ]

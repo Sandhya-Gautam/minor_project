@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+import json
+from django.contrib.auth.models import Group, Permission
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email,name, password=None, password2=None):
+    def create_user(self, email,username, password=None, password2=None, **extra_fields):
         
         if not email:
             raise ValueError("Users must have an email address")
@@ -12,7 +14,10 @@ class UserManager(BaseUserManager):
         
         user = self.model(
             email=self.normalize_email(email),
-            name=name
+            username=username,
+            password=password,
+
+
         )
 
         user.set_password(password)
@@ -33,10 +38,12 @@ class UserManager(BaseUserManager):
         return user
     
 class User(AbstractUser):
-    Fullname = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
     email=models.EmailField(  verbose_name="Email", max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    history=models.JSONField (default="", name=Fullname+"history" )
+    history=models.JSONField (default=dict, name="history" )
+    groups = models.ManyToManyField(Group, related_name='custom_user_set')
+    user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set')
 
     objects = UserManager()
     USERNAME_FIELD = "email"
