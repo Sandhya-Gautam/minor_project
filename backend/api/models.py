@@ -15,9 +15,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
-            password=password,
-
-
+            **extra_fields
         )
 
         user.set_password(password)
@@ -44,7 +42,7 @@ class User(AbstractUser):
     history=models.JSONField (default=dict, name="history" )
     groups = models.ManyToManyField(Group, related_name='custom_user_set')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set')
-
+    password=models.CharField(max_length=128)
     objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["name"]

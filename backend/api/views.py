@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from api.serializer import *
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.contrib.auth import login
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -22,9 +22,8 @@ def user_registration(request):
     if serializer.is_valid():
         user = serializer.save()
         # token = get_tokens_for_user(user)
-        return  Response(status.HTTP_201_CREATED)
-    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-
+        return Response({'msg': 'Registration Successful'}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def user_login(request):
@@ -32,8 +31,11 @@ def user_login(request):
     if serializer.is_valid():
         email= serializer.data.get('email')
         password = serializer.data.get('password')
+        print("hello")
         user = authenticate(email=email,password=password)
+ 
         if user is not None:
+            print("hello")
             # token = get_tokens_for_user(user)
             return Response({'msg':'Login Successful'}, status.HTTP_201_CREATED)
         return Response({'msg':'Login Failed'}, status.HTTP_400_BAD_REQUEST)

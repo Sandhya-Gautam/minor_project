@@ -21,7 +21,7 @@ from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('register', views.user_registration, name='user-register'),
+    path('register', views.user_registration, name='user-register'),
     path('login', views.user_login, name='user-login'),
     path('profile', views.user_profile, name='user-profile'),
     # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
