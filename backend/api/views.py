@@ -27,20 +27,19 @@ def user_registration(request):
 
 @api_view(['POST'])
 def user_login(request):
-    serializer = UserLoginSerializer(data=request.data)
-    if serializer.is_valid():
-        email= serializer.data.get('email')
-        password = serializer.data.get('password')
-        print("hello")
-        user = authenticate(email=email,password=password)
- 
-        if user is not None:
-            print("hello")
-            # token = get_tokens_for_user(user)
-            return Response({'msg':'Login Successful'}, status.HTTP_201_CREATED)
-        return Response({'msg':'Login Failed'}, status.HTTP_400_BAD_REQUEST)
-    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-
+    email = request.data.get('email')
+    password = request.data.get('password')
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({'msg': 'Email isnot registered'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    if user.check_password(password):
+        # Authentication successful
+        return Response({'msg': 'Login Successful'}, status=status.HTTP_200_OK)
+    else:
+        # Authentication failed
+        return Response({'msg': 'Password didnt match'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
