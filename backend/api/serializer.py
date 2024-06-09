@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from api.models import User
+from django.contrib.auth import authenticate
+from rest_framework.exceptions import AuthenticationFailed
 
 
 
@@ -30,7 +32,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "password"]
-    
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
